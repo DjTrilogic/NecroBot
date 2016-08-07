@@ -72,6 +72,7 @@ namespace PoGo.NecroBot.Logic
     public interface ILogicSettings
     {
         string BottingMode { get; }
+        TeamColor TeamColor { get; }
         bool UseWebsocket { get; }
         bool CatchPokemon { get; }
         bool TransferWeakPokemon { get; }

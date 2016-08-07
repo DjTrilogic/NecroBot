@@ -187,6 +187,8 @@ namespace PoGo.NecroBot.Logic
     {
         [DefaultValue("catch")]
         public string BottingMode;
+        [DefaultValue(TeamColor.Blue)]
+        public TeamColor TeamColor;
 
         [JsonIgnore]
         internal AuthSettings Auth = new AuthSettings();
@@ -1144,7 +1146,7 @@ namespace PoGo.NecroBot.Logic
             _settings = settings;
         }
 
-
+        public TeamColor TeamColor => _settings.TeamColor;
         public string BottingMode => _settings.BottingMode;
         public string ProfilePath => _settings.ProfilePath;
         public string ProfileConfigPath => _settings.ProfileConfigPath;

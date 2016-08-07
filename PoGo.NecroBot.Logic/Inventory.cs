@@ -270,6 +270,29 @@ namespace PoGo.NecroBot.Logic
             return pokemons.OrderByDescending(PokemonInfo.CalculatePokemonPerfection).Take(limit);
         }
 
+        public async Task<IEnumerable<PokemonData>> GetPokemonsToRevive()
+        {
+            var pokemons = await GetPokemons();
+            return pokemons.Where(p => p.Stamina == 0);
+        }
+
+        public async Task<IEnumerable<PokemonData>> GetPokemonsToHeal()
+        {
+            var pokemons = await GetPokemons();
+            return pokemons.Where(p => p.Stamina < p.StaminaMax);
+        }
+
+        public async Task<IEnumerable<ItemData>> GetPotions()
+        {
+            var items = await GetItems();
+            return items.Where(i => i.Count>0 && _potions.Any(p => p == i.ItemId)).OrderByDescending(i => (int)i.ItemId);
+        }
+
+        public async Task<IEnumerable<ItemData>> GetRevives()
+        {
+            var items = await GetItems();
+            return items.Where(i => i.Count > 0 && _revives.Any(p => p == i.ItemId)).OrderByDescending(i => (int)i.ItemId);
+        }
 
         public async Task<int> GetItemAmountByType(ItemId type)
         {
