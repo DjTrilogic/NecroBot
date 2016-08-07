@@ -107,6 +107,9 @@ namespace PoGo.NecroBot.Logic
 
     public class GlobalSettings
     {
+        [DefaultValue("catch")]
+        public string BottingMode;
+
         [JsonIgnore]
         internal AuthSettings Auth = new AuthSettings();
         [JsonIgnore]
@@ -993,6 +996,8 @@ namespace PoGo.NecroBot.Logic
             _settings = settings;
         }
 
+
+        public string BottingMode => _settings.BottingMode;
         public string ProfilePath => _settings.ProfilePath;
         public string ProfileConfigPath => _settings.ProfileConfigPath;
         public string GeneralConfigPath => _settings.GeneralConfigPath;

@@ -57,15 +57,21 @@ namespace PoGo.NecroBot.Logic.State
                 await UseIncubatorsTask.Execute(session, cancellationToken);
             }
 
-            if (session.LogicSettings.UseGpxPathing)
+            if (session.LogicSettings.BottingMode.ToLower().Equals("catch"))
             {
-                await FarmPokestopsGpxTask.Execute(session, cancellationToken);
+                if (session.LogicSettings.UseGpxPathing)
+                {
+                    await FarmPokestopsGpxTask.Execute(session, cancellationToken);
+                }
+                else
+                {
+                    await FarmPokestopsTask.Execute(session, cancellationToken);
+                }
             }
             else
             {
-                await FarmPokestopsTask.Execute(session, cancellationToken);
+                await FarmPokeGymsTask.Execute(session, cancellationToken);
             }
-
             return this;
         }
     }
