@@ -15,6 +15,7 @@ using PokemonGo.RocketAPI.Extensions;
 using POGOProtos.Map.Fort;
 using POGOProtos.Networking.Responses;
 using POGOProtos.Data;
+using POGOProtos.Data.Gym;
 
 #endregion
 
@@ -69,30 +70,10 @@ namespace PoGo.NecroBot.Logic.Tasks
             //TODO : CATCH FREE GYMS
             foreach (var pokeGym in pokeGymsList.Where(gym => gym.Enabled && gym.OwnedByTeam == 0))
             {
-                var distance = LocationUtils.CalculateDistanceInMeters(session.Client.CurrentLatitude,
-                    session.Client.CurrentLongitude, pokeGym.Latitude, pokeGym.Longitude);
-                session.EventDispatcher.Send(new FortTargetEvent { Name = "[---[ FREE POKEGYM ]---]", Distance = distance });
-                await session.Navigation.Move(new GeoCoordinate(pokeGym.Latitude, pokeGym.Longitude),
-                    session.LogicSettings.WalkingSpeedInKilometerPerHour, null, cancellationToken, session.LogicSettings.DisableHumanWalking);
-                var pokemonToDeploy = await GetDeployablePokemon(session);
-                if (pokemonToDeploy != null)
-                {
-                    var response = await session.Client.Fort.FortDeployPokemon(pokeGym.Id, pokemonToDeploy.Id);
-                    if (response.Result == FortDeployPokemonResponse.Types.Result.Success)
-                    {
-                        session.EventDispatcher.Send(new NoticeEvent() { Message = string.Format("SUCCESSFULLY DEPLOYED POKEMON '{0}(CP:{1})' IN GYM '{2}'", pokemonToDeploy.PokemonId, pokemonToDeploy.Cp, pokeGym.Id) });
-                    }
-                    else
-                    {
-                        // TODO : FAILED TO DEPLOY POKEMON IN THE GYM
-                        session.EventDispatcher.Send(new ErrorEvent() { Message = string.Format("FAILED TO DEPLOY POKEMON '{0}(CP:{1})' IN GYM '{2}' [{3}]", pokemonToDeploy.PokemonId, pokemonToDeploy.Cp, pokeGym.Id, response.Result) });
-                    }
-                }
-                else
-                {
-                    session.EventDispatcher.Send(new WarnEvent() { Message = "NO DEPLOYABLE POKEMON FOUND !" });
-                }
+                await CatchGym(session, pokeGym, cancellationToken);
             }
+
+            List<FortData> PossibleFreeGyms = new List<FortData>();
 
             // TODO : FIGHT OTHER GYMS
             foreach (var pokeGym in pokeGymsList.Where(gym => gym.Enabled && gym.OwnedByTeam != 0).OrderBy(
@@ -102,13 +83,28 @@ namespace PoGo.NecroBot.Logic.Tasks
             {
                 var distance = LocationUtils.CalculateDistanceInMeters(session.Client.CurrentLatitude,
                     session.Client.CurrentLongitude, pokeGym.Latitude, pokeGym.Longitude);
-                var pokeGymInfo = await session.Client.Fort.GetFort(pokeGym.Id, pokeGym.Latitude, pokeGym.Longitude);
-                session.EventDispatcher.Send(new FortTargetEvent { Name = pokeGymInfo.Name, Distance = distance });
-                if (ShouldAttackGym(session, pokeGymInfo))
+                var pokeGymInfo = await session.Client.Fort.GetGymDetails(pokeGym.Id, pokeGym.Latitude, pokeGym.Longitude);
+                if (pokeGymInfo.Result != GetGymDetailsResponse.Types.Result.Success)
                 {
-                    await session.Navigation.Move(new GeoCoordinate(pokeGym.Latitude, pokeGym.Longitude),
-                    session.LogicSettings.WalkingSpeedInKilometerPerHour, null, cancellationToken, session.LogicSettings.DisableHumanWalking);
-                    await AttackGym(session, pokeGymInfo, 10); // TODO: MAKE ATTACK TIMES CONFIGURABLE 
+                    continue;
+                }
+                session.EventDispatcher.Send(new FortTargetEvent { Name = pokeGymInfo.Name, Distance = distance });
+                var shouldAttack = ShouldAttackGym(session, pokeGymInfo);
+                var isGymFree = IsGymFree(session, pokeGymInfo);
+                if (shouldAttack || isGymFree)
+                {
+                    if (isGymFree)
+                    {
+                        await CatchGym(session, pokeGym, cancellationToken);
+                    }
+                    else
+                    {
+                        var mayBeFree = await AttackGym(session, cancellationToken, pokeGym, pokeGymInfo, 10); // TODO: MAKE ATTACK TIMES CONFIGURABLE 
+                        if (mayBeFree)
+                        {
+                            await CatchGym(session, pokeGym, cancellationToken);
+                        }
+                    }
                 }
                 else
                 {
@@ -116,36 +112,110 @@ namespace PoGo.NecroBot.Logic.Tasks
                 }
             }
 
-            // TODO: CATCH FREE GYMS IF ANY
+            var count = pokeGymsList.Count;
+            if (count > 0)
+            {
+                var pg = pokeGymsList[(new Random()).Next(count)];
+                await session.Navigation.Move(new GeoCoordinate(pg.Latitude, pg.Longitude),
+                    session.LogicSettings.WalkingSpeedInKilometerPerHour, null, cancellationToken, session.LogicSettings.DisableHumanWalking);
+                session.EventDispatcher.Send(new NoticeEvent() { Message = string.Format("TRAVELLING TO RANDOM GYM '{0}'", pg.Id) });
+            }
 
         }
 
-        private static async Task AttackGym(ISession session, FortDetailsResponse gymInfos, int maxTimes)
+        private static async Task CatchGym(ISession session, FortData pokeGym, CancellationToken cancellationToken)
         {
+            var initialLatitude = session.Client.CurrentLatitude;
+            var initialLogitude = session.Client.CurrentLongitude;
+            var distance = LocationUtils.CalculateDistanceInMeters(session.Client.CurrentLatitude,
+                    session.Client.CurrentLongitude, pokeGym.Latitude, pokeGym.Longitude);
+            session.EventDispatcher.Send(new FortTargetEvent { Name = "[---[ FREE POKEGYM ]---]", Distance = distance });
+            await session.Navigation.Move(new GeoCoordinate(pokeGym.Latitude, pokeGym.Longitude),
+                session.LogicSettings.WalkingSpeedInKilometerPerHour, null, cancellationToken, session.LogicSettings.DisableHumanWalking);
+            var pokemonToDeploy = await GetDeployablePokemon(session);
+            if (pokemonToDeploy != null)
+            {
+                var response = await session.Client.Fort.FortDeployPokemon(pokeGym.Id, pokemonToDeploy.Id);
+                if (response.Result == FortDeployPokemonResponse.Types.Result.Success)
+                {
+                    session.EventDispatcher.Send(new NoticeEvent() { Message = string.Format("SUCCESSFULLY DEPLOYED POKEMON '{0}(CP:{1})' IN GYM '{2}'", pokemonToDeploy.PokemonId, pokemonToDeploy.Cp, pokeGym.Id) });
+                }
+                else
+                {
+                    // TODO : FAILED TO DEPLOY POKEMON IN THE GYM
+                    session.EventDispatcher.Send(new ErrorEvent() { Message = string.Format("FAILED TO DEPLOY POKEMON '{0}(CP:{1})' IN GYM '{2}' [{3}]", pokemonToDeploy.PokemonId, pokemonToDeploy.Cp, pokeGym.Id, response.Result) });
+                }
+
+                session.EventDispatcher.Send(new NoticeEvent() { Message = string.Format("GOING BACK TO THE INITIAL LOCATION") });
+                await session.Navigation.Move(new GeoCoordinate(initialLatitude, initialLogitude),
+                session.LogicSettings.WalkingSpeedInKilometerPerHour, null, cancellationToken, session.LogicSettings.DisableHumanWalking);
+            }
+            else
+            {
+                session.EventDispatcher.Send(new WarnEvent() { Message = "NO DEPLOYABLE POKEMON FOUND !" });
+            }
+        }
+
+        private static async Task<bool> AttackGym(ISession session, CancellationToken cancellationToken, FortData pokeGym, GetGymDetailsResponse gymInfos, int maxTimes)
+        {
+            await session.Navigation.Move(new GeoCoordinate(pokeGym.Latitude, pokeGym.Longitude),
+            session.LogicSettings.WalkingSpeedInKilometerPerHour, null, cancellationToken, session.LogicSettings.DisableHumanWalking);
+
+            return IsGymFree(session, gymInfos);
+
+            // TODO: KNOW HOW BATTLE WORKS
             for (int i = 0; i < maxTimes; i++)
             {
-                var attackResponse = await session.Client.Fort.StartGymBattle(gymInfos.FortId, 0, (await session.Inventory.GetHighestsCp(6)).Select(p => p.Id));
+                var attackResponse = await session.Client.Fort.StartGymBattle(gymInfos.GymState.FortData.Id, gymInfos.GymState.Memberships.First().PokemonData.Id, (await session.Inventory.GetHighestsCp(6)).Select(p => p.Id));
                 if (attackResponse.Result == StartGymBattleResponse.Types.Result.Success)
                 {
                     session.EventDispatcher.Send(new NoticeEvent() { Message = string.Format("SUCCESSFULLY STARTED GYM BATTLE") });
                 }
                 else
                 {
-                    session.EventDispatcher.Send(new WarnEvent() { Message = string.Format("FAILED TO START GYM BATTLE [{0}]",attackResponse.Result)});
+                    session.EventDispatcher.Send(new WarnEvent() { Message = string.Format("FAILED TO START GYM BATTLE [{0}]", attackResponse.Result) });
                 }
             }
         }
 
-        private static bool ShouldAttackGym(ISession session, FortDetailsResponse gymInfos)
+
+        private static bool IsGymFree(ISession session, GetGymDetailsResponse gymInfos)
+        {
+            var membershipCount = gymInfos.GymState.Memberships.ToList().Count;
+            return session.Profile.PlayerData.Team == gymInfos.GymState.FortData.OwnedByTeam && membershipCount < MaxSlotByPrestige(gymInfos.GymState.FortData.GymPoints);
+        }
+
+        private static long MaxSlotByPrestige(long prestige)
+        {
+            if (prestige <= 2000)
+            {
+                return 1;
+            }
+            else if (prestige <= 4000)
+            {
+                return 2;
+            }
+            else if (prestige <= 8000)
+            {
+                return 3;
+            }
+            else if (prestige <= 12000)
+            {
+                return 4;
+            }
+            return 5;
+        }
+
+        private static bool ShouldAttackGym(ISession session, GetGymDetailsResponse gymInfos)
         {
             // ELLABORATE THE CALCULATION
-            return true;
+            return false;
         }
 
         private static async Task<PokemonData> GetDeployablePokemon(ISession session)
         {
             //TODO: ADD A MIN CP LIMIT IN THE SETTINGS 
-            return (await session.Inventory.GetHighestsCp(1)).FirstOrDefault();
+            return (await session.Inventory.GetHighestsCpAvailableToGym(1)).FirstOrDefault();
         }
 
         private static async Task<List<FortData>> GetPokeGyms(ISession session)
@@ -217,5 +287,6 @@ namespace PoGo.NecroBot.Logic.Tasks
                 }
             } while (pokemonsToHeal.Count > 0);
         }
+
     }
 }
