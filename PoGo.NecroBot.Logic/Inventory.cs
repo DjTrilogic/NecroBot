@@ -16,6 +16,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using PoGo.NecroBot.Logic.Utils;
 using System.Linq.Dynamic;
 using DynamicExpression = System.Linq.Dynamic.DynamicExpression;
 
@@ -28,6 +29,18 @@ namespace PoGo.NecroBot.Logic
     {
         private readonly Client _client;
         private readonly ILogicSettings _logicSettings;
+        private GetPlayerResponse _player = null;
+        private int _level = 0;
+
+        private readonly List<ItemId> _revives = new List<ItemId> { ItemId.ItemRevive, ItemId.ItemMaxRevive };
+        private GetInventoryResponse _cachedInventory;
+        private DateTime _lastRefresh;
+
+        public Inventory(Client client, ILogicSettings logicSettings)
+        {
+            _client = client;
+            _logicSettings = logicSettings;
+        }
 
         private readonly List<ItemId> _pokeballs = new List<ItemId>
         {
@@ -45,16 +58,6 @@ namespace PoGo.NecroBot.Logic
             ItemId.ItemMaxPotion
         };
 
-        private readonly List<ItemId> _revives = new List<ItemId> {ItemId.ItemRevive, ItemId.ItemMaxRevive};
-        private GetInventoryResponse _cachedInventory;
-        private DateTime _lastRefresh;
-
-        public Inventory(Client client, ILogicSettings logicSettings)
-        {
-            _client = client;
-            _logicSettings = logicSettings;
-        }
-
         public async Task DeletePokemonFromInvById(ulong id)
         {
             var inventory = await GetCachedInventory();
@@ -67,114 +70,62 @@ namespace PoGo.NecroBot.Logic
 
         public async Task<LevelUpRewardsResponse> GetLevelUpRewards(Inventory inv )
         {
-            var GetData = await _client.Player.GetPlayer(); 
-
-            var ClientLevel = await _client.Player.GetPlayerProfile( GetData.PlayerData.Username );
-            var Rewards = await _client.Player.GetLevelUpRewards( inv.GetPlayerStats().Result.FirstOrDefault().Level );
-
-            return Rewards;
-
+            return await GetLevelUpRewards(inv.GetPlayerStats().Result.FirstOrDefault().Level);
         }
+
         private async Task<GetInventoryResponse> GetCachedInventory()
         {
+            if (_player==null) GetPlayerData();
             var now = DateTime.UtcNow;
 
             if (_lastRefresh.AddSeconds(30).Ticks > now.Ticks)
-            {
                 return _cachedInventory;
-            }
+
             return await RefreshCachedInventory();
         }
-
-
-
-
+        
 
         public async Task<IEnumerable<PokemonData>> GetDuplicatePokemonToTransfer( 
                 IEnumerable<PokemonId> pokemonsNotToTransfer, IEnumerable<PokemonId> pokemonsToEvolve,
                 bool keepPokemonsThatCanEvolve = false, bool prioritizeIVoverCp = false
              )
         {
-
             var myPokemon = await GetPokemons();
+
             var myPokemonList = myPokemon.ToList();
-            var pokemonToTransfer = new List<PokemonData>();
 
-            //ExpressionContext context = new ExpressionContext(this);
-            //context.Imports.AddType(typeof(Math));
-            //context.Imports.AddType(typeof(PokemonInfo));
-            /*
-            const string additionalExample = @"
-                                       or PokemonInfo.GetPokemonCount(allPokemons, p) <= ptf.KeepMinDuplicatePokemon
-                                       or PokemonInfo.GetCountOfCpBetterPokemon(allPokemons, p) <= 0
-                                       or PokemonInfo.GetCountOfIvBetterPokemon(allPokemons, p) <= 0";
-            */
-            const string keepExpr =
-                                     //Keep if :
-                                     @"
-                                       ( 
-                                            (
-                                                p.Cp >= ptf.KeepMinCp 
-                                                {0} 
-                                                PokemonInfo.CalculatePokemonPerfection(p) >= ptf.KeepMinIvPercentage 
-                                                {0} 
-                                                (
-                                                    ptf.UseKeepMinLvl ? PokemonInfo.GetLevel(p) >= ptf.KeepMinLvl 
-                                                                      : ""{0}"" == ""and""
-                                                )
-                                            )
-                                            {1}
-                                            (ptf.Moves.Contains(p.Move1) or ptf.Moves.Contains(p.Move2))
-                                       ) 
-                                       ";
-
-
-            ExpressionParser.AddPredefinedType(typeof(PokemonInfo));
-            ExpressionParser.AddPredefinedType(typeof(PokemonData));
-            ExpressionParser.AddPredefinedType(typeof(List<PokemonMove>));
-
-            var p1 = Expression.Parameter(typeof(PokemonData), "p");
-            var p2 = Expression.Parameter(typeof(TransferFilter), "ptf");
-            var p3 = Expression.Parameter(typeof (List<PokemonData>), "allPokemons");
+            var pokemonToTransfer = myPokemonList.Where(p => !pokemonsNotToTransfer.Contains(p.PokemonId) && p.DeployedFortId == string.Empty && p.Favorite == 0).ToList();
 
             try
             {
-                var globalKeepExpression = DynamicExpression.ParseLambda(new[] { p1, p2 , p3}, null, 
-                    string.Format(keepExpr, CommonTransferFilter.KeepMinOperator, CommonTransferFilter.MovesOperator));
-
-                var globalKeepDelegate = globalKeepExpression.Compile();
-
-                pokemonToTransfer = myPokemonList.Where(p => !pokemonsNotToTransfer.Contains(p.PokemonId) && p.DeployedFortId == string.Empty && p.Favorite == 0).ToList();
                 pokemonToTransfer =
                     pokemonToTransfer.Where(
                         p =>
                         {
-                            var ptf = GetPokemonTransferFilter(p.PokemonId);
-                            if (ptf == CommonTransferFilter)
-                                return !(bool) globalKeepDelegate.DynamicInvoke(p, ptf, myPokemonList);
+                            var pokemonTransferFilter = GetPokemonTransferFilter(p.PokemonId);
 
-                            var localKeepExpression = DynamicExpression.ParseLambda(new[] { p1, p2, p3 }, null,
-                                string.Format(keepExpr, ptf.KeepMinOperator, ptf.MovesOperator));
-                            var localKeepDelegate = localKeepExpression.Compile();
-
-                            return !(bool)localKeepDelegate.DynamicInvoke(p, ptf, myPokemonList);
-
+                            return
+                                !pokemonTransferFilter.MovesOperator.BoolFunc(
+                                    pokemonTransferFilter.Moves.Intersect(new[] { p.Move1, p.Move2 }).Any(),
+                                    pokemonTransferFilter.KeepMinOperator.BoolFunc(
+                                        p.Cp >= pokemonTransferFilter.KeepMinCp,
+                                        PokemonInfo.CalculatePokemonPerfection(p) >= pokemonTransferFilter.KeepMinIvPercentage,
+                                        pokemonTransferFilter.KeepMinOperator.ReverseBoolFunc(
+                                            pokemonTransferFilter.KeepMinOperator.InverseBool(pokemonTransferFilter.UseKeepMinLvl),
+                                            PokemonInfo.GetLevel(p) >= pokemonTransferFilter.KeepMinLvl)));
                         }).ToList();
             }
-            catch(Exception e)
-            { 
+            catch (Exception e)
+            {
                 throw e;
             }
-
-
-
+            
             var myPokemonSettings = await GetPokemonSettings();
             var pokemonSettings = myPokemonSettings.ToList();
 
             var myPokemonFamilies = await GetPokemonFamilies();
             var pokemonFamilies = myPokemonFamilies.ToArray();
-
-
+            
             var results = new List<PokemonData>();
 
             foreach (var pokemonGroupToTransfer in pokemonToTransfer.GroupBy(p => p.PokemonId).ToList())
@@ -191,7 +142,6 @@ namespace PoGo.NecroBot.Logic
                     settings.CandyToEvolve > 0 &&
                     settings.EvolutionIds.Count != 0)
                 {
-                    //do not try to fix something that works, goto line 220 for explonation
                     var possibleCountToEvolve = familyCandy.Candy_ / settings.CandyToEvolve;
                     amountToKeepInStorage = Math.Max(amountToKeepInStorage, possibleCountToEvolve);
 
@@ -290,13 +240,16 @@ namespace PoGo.NecroBot.Logic
                 .OrderByDescending(x => x.Cp)
                 .FirstOrDefault();
         }
+
         public async Task<int> GetStarDust()
         {
-            var StarDust =await  _client.Player.GetPlayer();
-            var gdrfds = StarDust.PlayerData.Currencies;
-            var SplitStar = gdrfds[1].Amount;
-            return SplitStar;
+            GetPlayerData();
+            return _player.PlayerData.Currencies[1].Amount;
+        }
 
+        public async void GetPlayerData()
+        {
+            _player = await _client.Player.GetPlayer();
         }
 
         public async Task<PokemonData> GetHighestPokemonOfTypeByIv(PokemonData pokemon)
@@ -352,7 +305,6 @@ namespace PoGo.NecroBot.Logic
             var items = await GetItems();
             return items.Where(i => i.Count > 0 && _revives.Any(p => p == i.ItemId)).OrderByDescending(i => (int)i.ItemId);
         }
-
         public async Task<int> GetItemAmountByType(ItemId type)
         {
             var pokeballs = await GetItems();
@@ -477,7 +429,7 @@ namespace PoGo.NecroBot.Logic
             {
                 myPokemon =
                     myPokemon.Where(
-                        p => (_logicSettings.EvolveAllPokemonWithEnoughCandy && pokemonIds.Contains(p.PokemonId)) ||
+                        p => (pokemonIds.Contains(p.PokemonId)) ||
                              (_logicSettings.EvolveAllPokemonAboveIv &&
                               (PokemonInfo.CalculatePokemonPerfection(p) >= _logicSettings.EvolveAboveIvValue)));
             }
@@ -504,19 +456,30 @@ namespace PoGo.NecroBot.Logic
                 //Don't evolve if we can't evolve it
                 if (settings.EvolutionIds.Count == 0)
                     continue;
-
+                //DO NOT CHANGE! TESTED AND WORKS
                 var pokemonCandyNeededAlready =
-                    pokemonToEvolve.Count(
-                        p => pokemonSettings.Single(x => x.PokemonId == p.PokemonId).FamilyId == settings.FamilyId)*
+                    (pokemonToEvolve.Count(
+                        p => pokemonSettings.Single(x => x.PokemonId == p.PokemonId).FamilyId == settings.FamilyId) + 1) *
                     settings.CandyToEvolve;
 
-                if (familyCandy.Candy_ - pokemonCandyNeededAlready > settings.CandyToEvolve)
+                if (familyCandy.Candy_ >= pokemonCandyNeededAlready)
                 {
                     pokemonToEvolve.Add(pokemon);
                 }
             }
 
             return pokemonToEvolve;
+        }
+
+        public async Task<LevelUpRewardsResponse> GetLevelUpRewards(int level)
+        {
+            if (_level == 0 || level > _level)
+            {
+                _level = level;
+                return await _client.Player.GetLevelUpRewards(level);
+            }
+
+            return new LevelUpRewardsResponse();
         }
 
         public async Task<List<PokemonData>> GetPokemonToUpgrade()
@@ -542,21 +505,15 @@ namespace PoGo.NecroBot.Logic
                     highestPokemonForUpgrade.OrderByDescending(p => p.Cp).ToList();
         }
 
-        private TransferFilter _commonTransferFilter = null;
-        public TransferFilter CommonTransferFilter => _commonTransferFilter ??
-                                                      (_commonTransferFilter =
-                                                          new TransferFilter(_logicSettings.KeepMinCp, _logicSettings.KeepMinLvl,
-                                                              _logicSettings.UseKeepMinLvl, _logicSettings.KeepMinIvPercentage,
-                                                              _logicSettings.KeepMinOperator, _logicSettings.KeepMinDuplicatePokemon));
-
         public TransferFilter GetPokemonTransferFilter(PokemonId pokemon)
         {
-            TransferFilter result;
-
-            if (_logicSettings.PokemonsTransferFilter == null || !_logicSettings.PokemonsTransferFilter.TryGetValue(pokemon, out result))
-                result = CommonTransferFilter;
-
-            return result;
+            if (_logicSettings.PokemonsTransferFilter != null &&
+                _logicSettings.PokemonsTransferFilter.ContainsKey(pokemon))
+            {
+                return _logicSettings.PokemonsTransferFilter[pokemon];
+            }
+            return new TransferFilter(_logicSettings.KeepMinCp, _logicSettings.KeepMinLvl, _logicSettings.UseKeepMinLvl, _logicSettings.KeepMinIvPercentage,
+                _logicSettings.KeepMinOperator, _logicSettings.KeepMinDuplicatePokemon);
         }
 
         public async Task<GetInventoryResponse> RefreshCachedInventory()

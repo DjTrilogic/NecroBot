@@ -1,237 +1,23 @@
 # Change Log
 
-## [v0.7.7](https://github.com/NECROBOTIO/NecroBot/tree/v0.7.6) (2016-08-07)
-[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.7.5...v0.7.6)
-
-# Change Log
-
-## [v0.7.5](https://github.com/NECROBOTIO/NecroBot/tree/v0.7.5) (2016-08-07)
-[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.7.4...v0.7.5)
-
-**Closed issues:**
-
-- auth does not work [\#3067](https://github.com/NECROBOTIO/NecroBot/issues/3067)
-- How to set bot so that it only evolves  [\#3055](https://github.com/NECROBOTIO/NecroBot/issues/3055)
-- Having more pokemon than duplicate settings! [\#3053](https://github.com/NECROBOTIO/NecroBot/issues/3053)
-
-**Merged pull requests:**
-
-- Fix update loop [\#3076](https://github.com/NECROBOTIO/NecroBot/pull/3076) ([GrimmGringo](https://github.com/GrimmGringo))
-- Update translation.es.json [\#3056](https://github.com/NECROBOTIO/NecroBot/pull/3056) ([javilonas](https://github.com/javilonas))
-- New release with fixed language functionality [\#3052](https://github.com/NECROBOTIO/NecroBot/pull/3052) ([GrimmGringo](https://github.com/GrimmGringo))
-- Changes and updates for translation.ro.json [\#3050](https://github.com/NECROBOTIO/NecroBot/pull/3050) ([cristisilaghi](https://github.com/cristisilaghi))
-- Update and rename translation.pt-br.json to translation.pt\_BR.json [\#3038](https://github.com/NECROBOTIO/NecroBot/pull/3038) ([PrimOox](https://github.com/PrimOox))
-
-## [v0.7.4](https://github.com/NECROBOTIO/NecroBot/tree/v0.7.4) (2016-08-07)
-[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.7.3...v0.7.4)
+## [v0.7.7](https://github.com/NECROBOTIO/NecroBot/tree/v0.7.7) (2016-08-08)
+[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.7.6...v0.7.7)
 
 **Implemented enhancements:**
 
-- Update translation.es.json [\#3032](https://github.com/NECROBOTIO/NecroBot/pull/3032) ([javilonas](https://github.com/javilonas))
+- New Configuration for Keep Duplicate pokemons + Evolve [\#3033](https://github.com/NECROBOTIO/NecroBot/issues/3033)
+- translations.ja.json \(PokemonStrings and PokemonMovesetStrings only\) [\#3031](https://github.com/NECROBOTIO/NecroBot/issues/3031)
+- Language/information issues [\#2747](https://github.com/NECROBOTIO/NecroBot/issues/2747)
+- \[Enhancement\] Fully customizable transfer/evolve logic [\#2745](https://github.com/NECROBOTIO/NecroBot/issues/2745)
 
-**Closed issues:**
+**Fixed bugs:**
 
-- KeepMinCP & KeepMinIV [\#3045](https://github.com/NECROBOTIO/NecroBot/issues/3045)
-- Null Exception Thrown [\#3039](https://github.com/NECROBOTIO/NecroBot/issues/3039)
-- No usable pokestops found in your are!!! [\#3025](https://github.com/NECROBOTIO/NecroBot/issues/3025)
-- Please Help - Client Won't Work [\#3016](https://github.com/NECROBOTIO/NecroBot/issues/3016)
-- Endless loop, did not compile the file! ver 0.7.6 [\#3005](https://github.com/NECROBOTIO/NecroBot/issues/3005)
-
-**Merged pull requests:**
-
-- Merge to remove debug line for translation [\#3047](https://github.com/NECROBOTIO/NecroBot/pull/3047) ([GrimmGringo](https://github.com/GrimmGringo))
-- Fixed missing eventPokemonCaptureSuccess and eventPokemonCaptureFailed [\#2941](https://github.com/NECROBOTIO/NecroBot/pull/2941) ([ChemiHatake](https://github.com/ChemiHatake))
-
-## [v0.7.3](https://github.com/NECROBOTIO/NecroBot/tree/v0.7.3) (2016-08-07)
-[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.7.2...v0.7.3)
-
-**Implemented enhancements:**
-
-- \[Request\]variable Altitude [\#2744](https://github.com/NECROBOTIO/NecroBot/issues/2744)
-
-**Closed issues:**
-
-- Anyone getting this\> [\#2995](https://github.com/NECROBOTIO/NecroBot/issues/2995)
-- Null Value Exception in MoveNext\(\) [\#2986](https://github.com/NECROBOTIO/NecroBot/issues/2986)
-- NecroBot stops after traveling to Pokestop with this error: [\#2979](https://github.com/NECROBOTIO/NecroBot/issues/2979)
-- Error problem  [\#2978](https://github.com/NECROBOTIO/NecroBot/issues/2978)
-- Not sniping for dragonair? [\#2958](https://github.com/NECROBOTIO/NecroBot/issues/2958)
-- load failed [\#2957](https://github.com/NECROBOTIO/NecroBot/issues/2957)
-- AuthType PTC tries to login with Google - Please mark as fixed [\#2954](https://github.com/NECROBOTIO/NecroBot/issues/2954)
--  \[14:56:12\] \(ATTENTION\) No usable PokeStops found in your area. Is your maximum distance too small? [\#2951](https://github.com/NECROBOTIO/NecroBot/issues/2951)
-- null exceptions [\#2950](https://github.com/NECROBOTIO/NecroBot/issues/2950)
-- Global? [\#2944](https://github.com/NECROBOTIO/NecroBot/issues/2944)
-- PokemonsTransferFilter min operator "OR" not working properly [\#2940](https://github.com/NECROBOTIO/NecroBot/issues/2940)
-- "KeepMinCp" not working [\#2928](https://github.com/NECROBOTIO/NecroBot/issues/2928)
-- Feature Request [\#2923](https://github.com/NECROBOTIO/NecroBot/issues/2923)
-- Necro doing nothing.. [\#2918](https://github.com/NECROBOTIO/NecroBot/issues/2918)
-- Transfrer not following my rules [\#2916](https://github.com/NECROBOTIO/NecroBot/issues/2916)
-- Translate German [\#2911](https://github.com/NECROBOTIO/NecroBot/issues/2911)
-- Stuck at Logging in... [\#2901](https://github.com/NECROBOTIO/NecroBot/issues/2901)
-- won't let me sign in with ptc [\#2899](https://github.com/NECROBOTIO/NecroBot/issues/2899)
-- No .exe in the latest 0.7.2 [\#2897](https://github.com/NECROBOTIO/NecroBot/issues/2897)
-- 0.7.2 breaks login [\#2887](https://github.com/NECROBOTIO/NecroBot/issues/2887)
-- Error when upgrade to 0.7.2 [\#2880](https://github.com/NECROBOTIO/NecroBot/issues/2880)
-- Is the Discord-Server deleted? [\#2877](https://github.com/NECROBOTIO/NecroBot/issues/2877)
-- Bot not ignoring pokemon filling me up with pidgeys and rattatas [\#2876](https://github.com/NECROBOTIO/NecroBot/issues/2876)
-- recycle off ? [\#2874](https://github.com/NECROBOTIO/NecroBot/issues/2874)
-- How can I config multiple bots? [\#2873](https://github.com/NECROBOTIO/NecroBot/issues/2873)
-- Issue loading translations [\#2872](https://github.com/NECROBOTIO/NecroBot/issues/2872)
-- TRANSFERED problem [\#2865](https://github.com/NECROBOTIO/NecroBot/issues/2865)
-- Sniping from discord channels does not work [\#2860](https://github.com/NECROBOTIO/NecroBot/issues/2860)
-- new to necrobot, getting errors. [\#2809](https://github.com/NECROBOTIO/NecroBot/issues/2809)
-
-**Merged pull requests:**
-
-- Merge pull request \#82 from NECROBOTIO/master [\#3011](https://github.com/NECROBOTIO/NecroBot/pull/3011) ([GrimmGringo](https://github.com/GrimmGringo))
-- Merged removal of google maps api call with random alt generation [\#2989](https://github.com/NECROBOTIO/NecroBot/pull/2989) ([GrimmGringo](https://github.com/GrimmGringo))
-- Fix for realistic height [\#2971](https://github.com/NECROBOTIO/NecroBot/pull/2971) ([davedevils](https://github.com/davedevils))
-- Change  UseBerriesOperator  to OR for better catch [\#2960](https://github.com/NECROBOTIO/NecroBot/pull/2960) ([ilihack](https://github.com/ilihack))
-- Update translation.ru\_RU.json [\#2956](https://github.com/NECROBOTIO/NecroBot/pull/2956) ([mozgin1](https://github.com/mozgin1))
-- Rebase French translation on translation.en.json [\#2955](https://github.com/NECROBOTIO/NecroBot/pull/2955) ([NZX-DeSiGN](https://github.com/NZX-DeSiGN))
-- Limit pokemon Lat & Long to 6 decimals [\#2945](https://github.com/NECROBOTIO/NecroBot/pull/2945) ([gameuser1](https://github.com/gameuser1))
-- Update translation.pl.json [\#2919](https://github.com/NECROBOTIO/NecroBot/pull/2919) ([Dyzson](https://github.com/Dyzson))
-- Update Inventory.cs - Optimal Number of candies needed for mass evolve [\#2896](https://github.com/NECROBOTIO/NecroBot/pull/2896) ([PedroSeda](https://github.com/PedroSeda))
-- Updated lang list + some ordering [\#2895](https://github.com/NECROBOTIO/NecroBot/pull/2895) ([cristisilaghi](https://github.com/cristisilaghi))
-- Ask any language to rebuild if it fails [\#2883](https://github.com/NECROBOTIO/NecroBot/pull/2883) ([GrimmGringo](https://github.com/GrimmGringo))
-- Readme [\#2862](https://github.com/NECROBOTIO/NecroBot/pull/2862) ([GrimmGringo](https://github.com/GrimmGringo))
-- Updating readme [\#2861](https://github.com/NECROBOTIO/NecroBot/pull/2861) ([GrimmGringo](https://github.com/GrimmGringo))
-
-## [v0.7.2](https://github.com/NECROBOTIO/NecroBot/tree/v0.7.2) (2016-08-07)
-[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.7.1...v0.7.2)
-
-**Implemented enhancements:**
-
-- Static Values in RequestBuilder [\#2746](https://github.com/NECROBOTIO/NecroBot/issues/2746)
-- \[Enhancement\] Missing delay fix, Exp earned on capture... [\#2755](https://github.com/NECROBOTIO/NecroBot/pull/2755) ([ChemiHatake](https://github.com/ChemiHatake))
-
-**Closed issues:**
-
-- Trashed all my Ultra balls, Great balls. [\#2827](https://github.com/NECROBOTIO/NecroBot/issues/2827)
-- Device information for NOX [\#2819](https://github.com/NECROBOTIO/NecroBot/issues/2819)
-- Skip all pokemon [\#2812](https://github.com/NECROBOTIO/NecroBot/issues/2812)
-- Snipe on necro bot [\#2810](https://github.com/NECROBOTIO/NecroBot/issues/2810)
-- \[Error\] NullReferenceException in SnipePokemonTask [\#2808](https://github.com/NECROBOTIO/NecroBot/issues/2808)
-- iOS DeviceInfo example pls [\#2795](https://github.com/NECROBOTIO/NecroBot/issues/2795)
-- Example DeviceInfo for iPhone please? [\#2791](https://github.com/NECROBOTIO/NecroBot/issues/2791)
-- Mobile device Specifications inside config.json [\#2788](https://github.com/NECROBOTIO/NecroBot/issues/2788)
-- Don't use high level balls with low CP pokemon [\#2787](https://github.com/NECROBOTIO/NecroBot/issues/2787)
-- \[0.7.1\] DeviceInfo [\#2786](https://github.com/NECROBOTIO/NecroBot/issues/2786)
-- Sniping with Pogofeeder isn't working [\#2785](https://github.com/NECROBOTIO/NecroBot/issues/2785)
-- POGOProtos Files Missing? [\#2783](https://github.com/NECROBOTIO/NecroBot/issues/2783)
-- android deviceid [\#2781](https://github.com/NECROBOTIO/NecroBot/issues/2781)
-- Unban from Softban seems not to work. [\#2780](https://github.com/NECROBOTIO/NecroBot/issues/2780)
-- Sniping With Necrobot? [\#2779](https://github.com/NECROBOTIO/NecroBot/issues/2779)
-- create an excel sheet with all pokemons the bot catched [\#2777](https://github.com/NECROBOTIO/NecroBot/issues/2777)
-- System.ArgumentOutOfRangeException: Argument must be in range of -180 to 180 [\#2774](https://github.com/NECROBOTIO/NecroBot/issues/2774)
-- wrong gmail account [\#2773](https://github.com/NECROBOTIO/NecroBot/issues/2773)
-- Possibly not a problem ? [\#2771](https://github.com/NECROBOTIO/NecroBot/issues/2771)
-
-**Merged pull requests:**
-
-- Updated readme, release 0.7.2 [\#2856](https://github.com/NECROBOTIO/NecroBot/pull/2856) ([GrimmGringo](https://github.com/GrimmGringo))
-- Merge pull request \#79 from NECROBOTIO/master [\#2854](https://github.com/NECROBOTIO/NecroBot/pull/2854) ([GrimmGringo](https://github.com/GrimmGringo))
-- \[Feature\] Automatic altitude, Taken from the google elevation api [\#2826](https://github.com/NECROBOTIO/NecroBot/pull/2826) ([ChemiHatake](https://github.com/ChemiHatake))
-- Update translation.ru\_RU.json [\#2804](https://github.com/NECROBOTIO/NecroBot/pull/2804) ([mozgin1](https://github.com/mozgin1))
-- Fixed websocket [\#2797](https://github.com/NECROBOTIO/NecroBot/pull/2797) ([randeraad](https://github.com/randeraad))
-- Romanian translation updated [\#2794](https://github.com/NECROBOTIO/NecroBot/pull/2794) ([cristisilaghi](https://github.com/cristisilaghi))
-- Polish looks broken on softban part. [\#2784](https://github.com/NECROBOTIO/NecroBot/pull/2784) ([Zexorz](https://github.com/Zexorz))
-- Update translation.it.json [\#2772](https://github.com/NECROBOTIO/NecroBot/pull/2772) ([qwert95](https://github.com/qwert95))
-- update translation.zh\_CN.json [\#2769](https://github.com/NECROBOTIO/NecroBot/pull/2769) ([Greatliu89](https://github.com/Greatliu89))
-- Update translation.ru\_RU.json [\#2742](https://github.com/NECROBOTIO/NecroBot/pull/2742) ([mozgin1](https://github.com/mozgin1))
-- Updated Danish translation file [\#2741](https://github.com/NECROBOTIO/NecroBot/pull/2741) ([FL4ZH](https://github.com/FL4ZH))
-- Update translation.zh\_TW.json [\#2739](https://github.com/NECROBOTIO/NecroBot/pull/2739) ([jwchen119](https://github.com/jwchen119))
-- Update translation.zh\_TW.json [\#2738](https://github.com/NECROBOTIO/NecroBot/pull/2738) ([david082321](https://github.com/david082321))
-- Update translation.ru\_RU.json - fix typo [\#2737](https://github.com/NECROBOTIO/NecroBot/pull/2737) ([kraleksandr](https://github.com/kraleksandr))
-
-## [v0.7.1](https://github.com/NECROBOTIO/NecroBot/tree/v0.7.1) (2016-08-07)
-[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.7.0...v0.7.1)
-
-**Implemented enhancements:**
-
-- \[6.4\] Possibility to setup more than 1 moveset to keep [\#2692](https://github.com/NECROBOTIO/NecroBot/issues/2692)
-- moves arent translated in 0.6.4 \[DE trans\] [\#2584](https://github.com/NECROBOTIO/NecroBot/issues/2584)
-- \[IDEA\] Add Stardust/H as well as Evolution counter on title bar [\#2555](https://github.com/NECROBOTIO/NecroBot/issues/2555)
-- why do we have to choose? "LevelUpByCPorIv":  [\#2553](https://github.com/NECROBOTIO/NecroBot/issues/2553)
-- upgrading not detecting IV100 [\#2551](https://github.com/NECROBOTIO/NecroBot/issues/2551)
-- Sniping Pokemon coordinates errors [\#2531](https://github.com/NECROBOTIO/NecroBot/issues/2531)
-- Can we have the feature to skip a pokemon if the IV does not meet our requirements? [\#2512](https://github.com/NECROBOTIO/NecroBot/issues/2512)
-- bot says transfer nidoranf/nidoranm yet needs female/male as input [\#2501](https://github.com/NECROBOTIO/NecroBot/issues/2501)
-- \[Suggestion\] Change "UseTransferIvForSnipe" to "UseKeepMinIvPercentageForSnipe" [\#2498](https://github.com/NECROBOTIO/NecroBot/issues/2498)
-- \[SUGGESTION\] Split default location to seperate json file [\#2497](https://github.com/NECROBOTIO/NecroBot/issues/2497)
-- Dump file while running [\#2478](https://github.com/NECROBOTIO/NecroBot/issues/2478)
-- REQUEST: Only level up EVOLVABLE pokemon [\#2467](https://github.com/NECROBOTIO/NecroBot/issues/2467)
-- \[Sugestions\] and \[Transfer pokemon bug\] [\#2464](https://github.com/NECROBOTIO/NecroBot/issues/2464)
-- \[REQUEST\]Change "SnipeIgnoreUnknownIv" to "SnipeUnknownIv" [\#2461](https://github.com/NECROBOTIO/NecroBot/issues/2461)
-- merge percentages and probabilities to use the same syntax? [\#2456](https://github.com/NECROBOTIO/NecroBot/issues/2456)
-- REQUEST: Minimum ULTRAballs for Snipings [\#2452](https://github.com/NECROBOTIO/NecroBot/issues/2452)
-- \[SUGGESTION\] triggering a pokeball-run mode when pokeball is below than a value [\#2450](https://github.com/NECROBOTIO/NecroBot/issues/2450)
-- REQUEST: Automatic Cleaning Log Files [\#2444](https://github.com/NECROBOTIO/NecroBot/issues/2444)
-- \[Feature Request\] Use Potions\Revive before recycling [\#2441](https://github.com/NECROBOTIO/NecroBot/issues/2441)
-- \[Featurerequest\] KeepMinLevel [\#2440](https://github.com/NECROBOTIO/NecroBot/issues/2440)
-- Config frase: "PokemonsToIgnore" -\> "PokemonsNotToCatch" [\#2433](https://github.com/NECROBOTIO/NecroBot/issues/2433)
-- \[IDEA\] Master Server for Rare Pokemons [\#2431](https://github.com/NECROBOTIO/NecroBot/issues/2431)
-- \[Possible Feature\]  Walk around without always heading directly to pokestops. and others [\#2415](https://github.com/NECROBOTIO/NecroBot/issues/2415)
-- \[Feature Request\]\(half-advanced\) Use PokeBalls Relative to Pokemon LVL & IV [\#2406](https://github.com/NECROBOTIO/NecroBot/issues/2406)
-- Stardust Deficiency!!! [\#2400](https://github.com/NECROBOTIO/NecroBot/issues/2400)
-- \[Suggestion\] Combines redundant logs message [\#2371](https://github.com/NECROBOTIO/NecroBot/issues/2371)
-- \[Suggestion\] Using MinCandy Threshold value for Upgrading [\#2360](https://github.com/NECROBOTIO/NecroBot/issues/2360)
-- \[Additional Feature\] to \#2346 's [\#2358](https://github.com/NECROBOTIO/NecroBot/issues/2358)
-- \[Feature Request\]More info in application title [\#2346](https://github.com/NECROBOTIO/NecroBot/issues/2346)
-- \[Feature Request\] New user, filled up Auth.json and few config.json in console [\#2335](https://github.com/NECROBOTIO/NecroBot/issues/2335)
-- Upgrade Specific Pokemon [\#2334](https://github.com/NECROBOTIO/NecroBot/issues/2334)
-- \[Feature Request\] First time use, directly open config directory [\#2333](https://github.com/NECROBOTIO/NecroBot/issues/2333)
-- Bot doesn't evolve after the first batch of evolving with lucky egg. And use incense if lucky egg is active. [\#2324](https://github.com/NECROBOTIO/NecroBot/issues/2324)
-- \[Feature Request\] KeepMaxDuplicatePokemon within PokemonsTransferFilter? [\#2313](https://github.com/NECROBOTIO/NecroBot/issues/2313)
-- v0.6.2 Lat and Long don't have the same lenght for eventPokemonCapture \(Normal vs Lure\) [\#2311](https://github.com/NECROBOTIO/NecroBot/issues/2311)
-- \<Suggestion\> Add \#pokemon in inventory to Title, details on movelists/syntax for transfer keeping [\#2304](https://github.com/NECROBOTIO/NecroBot/issues/2304)
-- \[suggestion\] Add Rename to options- level of pokemon [\#2282](https://github.com/NECROBOTIO/NecroBot/issues/2282)
-- Add leave catch function [\#2216](https://github.com/NECROBOTIO/NecroBot/issues/2216)
-- Change UseGreatBallAboveIv to a percentage [\#2165](https://github.com/NECROBOTIO/NecroBot/issues/2165)
-- Please add random speed \(ex: 15-40\) [\#2140](https://github.com/NECROBOTIO/NecroBot/issues/2140)
-- \[Suggestion\] Using Great/Ultra/Master Ball should have "and" / "or" Operator [\#2107](https://github.com/NECROBOTIO/NecroBot/issues/2107)
-- Pokemon rare list [\#2088](https://github.com/NECROBOTIO/NecroBot/issues/2088)
-- \[Feature Request\] Level, CP, IV Keep/Evolve Filter [\#2085](https://github.com/NECROBOTIO/NecroBot/issues/2085)
-- \[FeatureRequest\] - Add option to write csv log for spotted/captured pokemon [\#2083](https://github.com/NECROBOTIO/NecroBot/issues/2083)
-- \[Feature Request\] List Of Pokemon Caught During Botting [\#2062](https://github.com/NECROBOTIO/NecroBot/issues/2062)
-- \[Enhancement\] Post "Potential Evolves" with intervals [\#2059](https://github.com/NECROBOTIO/NecroBot/issues/2059)
-- \[Feature\] Snipe for Pokedex [\#2042](https://github.com/NECROBOTIO/NecroBot/issues/2042)
-- \[FEATURE REQUEST\]List of Pokemon Caught/pokedex [\#2038](https://github.com/NECROBOTIO/NecroBot/issues/2038)
-- \[Feature Request\] Show coords on catch and show move damage in summary [\#2030](https://github.com/NECROBOTIO/NecroBot/issues/2030)
-- \[FeatureRequest\] dynamic loading of config file [\#2013](https://github.com/NECROBOTIO/NecroBot/issues/2013)
-- \[Suggestion - Fix\] Evolving/KeepPokemonThatCanEvolve calculation process [\#2001](https://github.com/NECROBOTIO/NecroBot/issues/2001)
-- \[Suggestion\] Summary Text [\#1994](https://github.com/NECROBOTIO/NecroBot/issues/1994)
-- \[Suggestion\] Pre Selected locations per level [\#1984](https://github.com/NECROBOTIO/NecroBot/issues/1984)
-- Option for renaming [\#1983](https://github.com/NECROBOTIO/NecroBot/issues/1983)
-- Feature request - Proxy support [\#1945](https://github.com/NECROBOTIO/NecroBot/issues/1945)
-- Random incremental WalkingSpeed changes [\#1941](https://github.com/NECROBOTIO/NecroBot/issues/1941)
-- Level reward not being collected [\#1936](https://github.com/NECROBOTIO/NecroBot/issues/1936)
-- \[Sugestion\] Can we add Locations to cycle? [\#1923](https://github.com/NECROBOTIO/NecroBot/issues/1923)
-- Config: add logging toggle option [\#1917](https://github.com/NECROBOTIO/NecroBot/issues/1917)
-- Automatically Level Up Pokemon [\#1905](https://github.com/NECROBOTIO/NecroBot/issues/1905)
-- \[Feature request\] Customizable throws settings [\#1895](https://github.com/NECROBOTIO/NecroBot/issues/1895)
-- back to home [\#1878](https://github.com/NECROBOTIO/NecroBot/issues/1878)
-- can i power up using minimum IV AND minimum CP? [\#1873](https://github.com/NECROBOTIO/NecroBot/issues/1873)
-- \[Suggestion\] Add Feature of throws [\#1872](https://github.com/NECROBOTIO/NecroBot/issues/1872)
-- Please add pofile info, stardust item n more [\#1863](https://github.com/NECROBOTIO/NecroBot/issues/1863)
-- \[Suggestion\] CP, iv & Potions, pokeballs [\#1862](https://github.com/NECROBOTIO/NecroBot/issues/1862)
-- Enhance GPX pathing with LastPos.ini [\#1856](https://github.com/NECROBOTIO/NecroBot/issues/1856)
-- \[Suggestion\] Evolve when candy is above threshold [\#1838](https://github.com/NECROBOTIO/NecroBot/issues/1838)
-- console log list of nearby mons [\#1818](https://github.com/NECROBOTIO/NecroBot/issues/1818)
-- \[Feature Request\] Auto-use Incense whenever there is an active LuckyEgg [\#1804](https://github.com/NECROBOTIO/NecroBot/issues/1804)
-- \[Feature Request\] Sort Pokemon by Lvl instead of CP or IV [\#1784](https://github.com/NECROBOTIO/NecroBot/issues/1784)
-- \[Improvement\] Pokemon search delay [\#1780](https://github.com/NECROBOTIO/NecroBot/issues/1780)
-- \[Feature request\] Ignoring all pokemon when sniping [\#1771](https://github.com/NECROBOTIO/NecroBot/issues/1771)
-- use pokeball at high CP for specific pokemon \( like Pinsir...\) [\#1745](https://github.com/NECROBOTIO/NecroBot/issues/1745)
-- \[Suggestion\] use 'AND' rather than 'OR' in the conditions to choose higher level ball [\#1725](https://github.com/NECROBOTIO/NecroBot/issues/1725)
-- How to turn off snipes and all captures? \(Only want to farm pokeballs\) [\#1673](https://github.com/NECROBOTIO/NecroBot/issues/1673)
-- Evolve/Transfer Catch-22 [\#1665](https://github.com/NECROBOTIO/NecroBot/issues/1665)
-- Option for Berry use [\#1647](https://github.com/NECROBOTIO/NecroBot/issues/1647)
-- auto leveling feature is inefficient [\#1634](https://github.com/NECROBOTIO/NecroBot/issues/1634)
-- Hatching eggs -\> prioritize 10 km [\#1579](https://github.com/NECROBOTIO/NecroBot/issues/1579)
-- \[Suggestion\] check for a match TypeOfPokemon=TheAttackTypePokemon [\#1574](https://github.com/NECROBOTIO/NecroBot/issues/1574)
-- \[REQUEST\] Rename Pokemon to Tranlasted Name [\#1571](https://github.com/NECROBOTIO/NecroBot/issues/1571)
-- {Suggestions} Pokemon Keep Filtering [\#1570](https://github.com/NECROBOTIO/NecroBot/issues/1570)
+- DeviceID always re-generated? [\#3302](https://github.com/NECROBOTIO/NecroBot/issues/3302)
+- '\)' or operator expected \(at index 212\) [\#3240](https://github.com/NECROBOTIO/NecroBot/issues/3240)
+- Stuck Login \(Ptc\) \(Default Config\) [\#3232](https://github.com/NECROBOTIO/NecroBot/issues/3232)
+- KeepMinOperator & KeepMinDuplicatePokemon not working correctly [\#3036](https://github.com/NECROBOTIO/NecroBot/issues/3036)
+- Language problem [\#3024](https://github.com/NECROBOTIO/NecroBot/issues/3024)
+- \[0.7.0\] Auth.json is not autoupdated [\#2761](https://github.com/NECROBOTIO/NecroBot/issues/2761)
 
 **Fixed bugs:**
 
@@ -345,7 +131,6 @@
 - Is your maximum distance too small? [\#2668](https://github.com/NECROBOTIO/NecroBot/issues/2668)
 - Bot just transferd my 1700 cp pinsir?!?! [\#2667](https://github.com/NECROBOTIO/NecroBot/issues/2667)
 - Niantic - Limit on connections/IP ! [\#2666](https://github.com/NECROBOTIO/NecroBot/issues/2666)
-- Wrong transfer [\#2665](https://github.com/NECROBOTIO/NecroBot/issues/2665)
 - WebSocketPort always uses 14252? [\#2664](https://github.com/NECROBOTIO/NecroBot/issues/2664)
 - banned [\#2663](https://github.com/NECROBOTIO/NecroBot/issues/2663)
 - Multi-Bot Management [\#2662](https://github.com/NECROBOTIO/NecroBot/issues/2662)
@@ -2186,19 +1971,19 @@
 - Give json settings the touch [\#581](https://github.com/NECROBOTIO/NecroBot/pull/581) ([ghost](https://github.com/ghost))
 
 ## [v0.1.1.0](https://github.com/NECROBOTIO/NecroBot/tree/v0.1.1.0) (2016-07-26)
-[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.1.1.1...v0.1.1.0)
+[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.1.4...v0.1.1.0)
+
+## [v0.1.4](https://github.com/NECROBOTIO/NecroBot/tree/v0.1.4) (2016-07-26)
+[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.1.1.4...v0.1.4)
+
+## [v0.1.1.4](https://github.com/NECROBOTIO/NecroBot/tree/v0.1.1.4) (2016-07-26)
+[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.1.1.1...v0.1.1.4)
 
 ## [v0.1.1.1](https://github.com/NECROBOTIO/NecroBot/tree/v0.1.1.1) (2016-07-26)
 [Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.1.1.2...v0.1.1.1)
 
 ## [v0.1.1.2](https://github.com/NECROBOTIO/NecroBot/tree/v0.1.1.2) (2016-07-26)
-[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.1.1.4...v0.1.1.2)
-
-## [v0.1.1.4](https://github.com/NECROBOTIO/NecroBot/tree/v0.1.1.4) (2016-07-26)
-[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.1.4...v0.1.1.4)
-
-## [v0.1.4](https://github.com/NECROBOTIO/NecroBot/tree/v0.1.4) (2016-07-26)
-[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.1.3...v0.1.4)
+[Full Changelog](https://github.com/NECROBOTIO/NecroBot/compare/v0.1.3...v0.1.1.2)
 
 **Implemented enhancements:**
 
