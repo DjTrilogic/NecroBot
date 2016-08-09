@@ -13,18 +13,15 @@ using PokemonGo.RocketAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using PoGo.NecroBot.Logic.Utils;
-using System.Linq.Dynamic;
-using DynamicExpression = System.Linq.Dynamic.DynamicExpression;
 
 #endregion
 
 namespace PoGo.NecroBot.Logic
 {
-   
+
     public class Inventory
     {
         private readonly Client _client;
@@ -75,7 +72,7 @@ namespace PoGo.NecroBot.Logic
 
         private async Task<GetInventoryResponse> GetCachedInventory()
         {
-            if (_player==null) GetPlayerData();
+            if (_player==null) await GetPlayerData();
             var now = DateTime.UtcNow;
 
             if (_lastRefresh.AddSeconds(30).Ticks > now.Ticks)
@@ -243,11 +240,11 @@ namespace PoGo.NecroBot.Logic
 
         public async Task<int> GetStarDust()
         {
-            GetPlayerData();
+            await GetPlayerData();
             return _player.PlayerData.Currencies[1].Amount;
         }
 
-        public async void GetPlayerData()
+        public async Task GetPlayerData()
         {
             _player = await _client.Player.GetPlayer();
         }
