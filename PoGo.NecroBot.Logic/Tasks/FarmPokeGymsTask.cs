@@ -16,6 +16,7 @@ using POGOProtos.Map.Fort;
 using POGOProtos.Networking.Responses;
 using POGOProtos.Data;
 using POGOProtos.Data.Gym;
+using System.Diagnostics;
 
 #endregion
 
@@ -25,6 +26,7 @@ namespace PoGo.NecroBot.Logic.Tasks
     {
         public static int TimesZeroXPawarded;
         private static bool teamSettingRequested;
+        private static Stopwatch stopWatch = new Stopwatch();
         public static async Task Execute(ISession session, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -81,14 +83,12 @@ namespace PoGo.NecroBot.Logic.Tasks
                             LocationUtils.CalculateDistanceInMeters(session.Client.CurrentLatitude,
                                 session.Client.CurrentLongitude, i.Latitude, i.Longitude)))
             {
-                var distance = LocationUtils.CalculateDistanceInMeters(session.Client.CurrentLatitude,
-                    session.Client.CurrentLongitude, pokeGym.Latitude, pokeGym.Longitude);
+               
                 var pokeGymInfo = await session.Client.Fort.GetGymDetails(pokeGym.Id, pokeGym.Latitude, pokeGym.Longitude);
                 if (pokeGymInfo.Result != GetGymDetailsResponse.Types.Result.Success)
                 {
                     continue;
                 }
-                session.EventDispatcher.Send(new FortTargetEvent { Name = pokeGymInfo.Name, Distance = distance });
                 var shouldAttack = ShouldAttackGym(session, pokeGymInfo);
                 var isGymFree = IsGymFree(session, pokeGymInfo);
                 if (shouldAttack || isGymFree)
@@ -115,10 +115,21 @@ namespace PoGo.NecroBot.Logic.Tasks
             var count = pokeGymsList.Count;
             if (count > 0)
             {
-                var pg = pokeGymsList[(new Random()).Next(count)];
-                await session.Navigation.Move(new GeoCoordinate(pg.Latitude, pg.Longitude),
-                    session.LogicSettings.WalkingSpeedInKilometerPerHour, null, cancellationToken, session.LogicSettings.DisableHumanWalking);
-                session.EventDispatcher.Send(new NoticeEvent() { Message = string.Format("TRAVELLING TO RANDOM GYM '{0}'", pg.Id) });
+                long delay = 5000;
+                if(stopWatch.IsRunning)
+                {
+                    stopWatch.Stop();
+                    delay = stopWatch.ElapsedMilliseconds;
+                }
+                if(delay>=5000)
+                { 
+                    var pg = pokeGymsList[(new Random()).Next(count)];
+                    await session.Navigation.Move(new GeoCoordinate(pg.Latitude, pg.Longitude),
+                        session.LogicSettings.WalkingSpeedInKilometerPerHour, null, cancellationToken, session.LogicSettings.DisableHumanWalking);
+                    session.EventDispatcher.Send(new NoticeEvent() { Message = string.Format("TRAVELLING TO RANDOM GYM '{0}'", pg.Id) });
+                }
+                stopWatch.Reset();
+                stopWatch.Start();
             }
 
         }
@@ -158,6 +169,10 @@ namespace PoGo.NecroBot.Logic.Tasks
 
         private static async Task<bool> AttackGym(ISession session, CancellationToken cancellationToken, FortData pokeGym, GetGymDetailsResponse gymInfos, int maxTimes)
         {
+            var distance = LocationUtils.CalculateDistanceInMeters(session.Client.CurrentLatitude,
+                      session.Client.CurrentLongitude, pokeGym.Latitude, pokeGym.Longitude);
+            session.EventDispatcher.Send(new FortTargetEvent { Name = gymInfos.Name, Distance = distance });
+
             await session.Navigation.Move(new GeoCoordinate(pokeGym.Latitude, pokeGym.Longitude),
             session.LogicSettings.WalkingSpeedInKilometerPerHour, null, cancellationToken, session.LogicSettings.DisableHumanWalking);
 
@@ -262,30 +277,27 @@ namespace PoGo.NecroBot.Logic.Tasks
             }
 
             List<POGOProtos.Data.PokemonData> pokemonsToHeal;
-            do
+            pokemonsToHeal = (await session.Inventory.GetPokemonsToHeal()).ToList();
+            foreach (var pokemon in pokemonsToHeal)
             {
-                pokemonsToHeal = (await session.Inventory.GetPokemonsToHeal()).ToList();
-                foreach (var pokemon in pokemonsToHeal)
+                var potions = (await session.Inventory.GetPotions()).ToList();
+                if (potions.Count > 0)
                 {
-                    var potions = (await session.Inventory.GetPotions()).ToList();
-                    if (potions.Count > 0)
+                    var response = await session.Client.Inventory.UseItemPotion(potions.First().ItemId, pokemon.Id);
+                    if (response.Result == UseItemPotionResponse.Types.Result.Success)
                     {
-                        var response = await session.Client.Inventory.UseItemPotion(potions.First().ItemId, pokemon.Id);
-                        if (response.Result == UseItemPotionResponse.Types.Result.Success)
-                        {
-                            session.EventDispatcher.Send(new NoticeEvent() { Message = string.Format("SUCCESSFULLY HEALED POKEMON '{0}(CP:{1})'", pokemon.PokemonId, pokemon.Cp) });
-                        }
-                        else
-                        {
-                            session.EventDispatcher.Send(new ErrorEvent() { Message = string.Format("FAILED TO HEAL POKEMON '{0}(CP:{1})' [{2}]", pokemon.PokemonId, pokemon.Cp, response.Result) });
-                        }
+                        session.EventDispatcher.Send(new NoticeEvent() { Message = string.Format("SUCCESSFULLY HEALED POKEMON '{0}(CP:{1})'", pokemon.PokemonId, pokemon.Cp) });
                     }
                     else
                     {
-                        session.EventDispatcher.Send(new WarnEvent() { Message = "NO MORE POTIONS !" });
+                        session.EventDispatcher.Send(new ErrorEvent() { Message = string.Format("FAILED TO HEAL POKEMON '{0}(CP:{1})' [{2}]", pokemon.PokemonId, pokemon.Cp, response.Result) });
                     }
                 }
-            } while (pokemonsToHeal.Count > 0);
+                else
+                {
+                    session.EventDispatcher.Send(new WarnEvent() { Message = "NO MORE POTIONS !" });
+                }
+            }
         }
 
     }
